@@ -45,4 +45,17 @@ describe('Auth API', () => {
                 assert.ok(body.token);
             });
     });
+
+    it('Gives 400 on signup of same email', () => {
+        return request
+            .post('/api/auth/signup')
+            .send({
+                email: 'test@test.com',
+                password: 'test'
+            })
+            .then(res => {
+                assert.equal(res.status, 400);
+                assert.equal(res.body.error, 'Email exists');
+            });
+    });
 });
