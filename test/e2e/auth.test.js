@@ -58,4 +58,30 @@ describe('Auth API', () => {
                 assert.equal(res.body.error, 'Email exists');
             });
     });
+
+    it('Gives 401 on non-existent email', () => {
+        return request  
+            .post('/api/auth/signin')
+            .send({
+                email: 'bad@email.com',
+                password: 'test'
+            })
+            .then(res => {
+                assert.equal(res.status, 401);
+                assert.equal(res.body.error, 'Invalid email or password');
+            });
+    });
+
+    it('Gives 401 on bad password', () => {
+        return request
+            .post('/api/auth/signin')
+            .send({
+                email: 'test@test.com',
+                password: 'badPassword'
+            })
+            .then(res => {
+                assert.equal(res.status, 401);
+                assert.equal(res.body.error, 'Invalid email or password');
+            });
+    });
 });
