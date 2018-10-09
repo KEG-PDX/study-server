@@ -5,8 +5,9 @@ const { dropCollection } = require('./db');
 describe('Auth API', () => {
 
     beforeEach(() => dropCollection('users'));
+    beforeEach(() => dropCollection('profiles'));
 
-    let token;
+    let token, profile;
 
     beforeEach(() => {
         return request
@@ -18,11 +19,15 @@ describe('Auth API', () => {
             })
             .then(({ body }) => {
                 token = body.token;
+                profile = body.profile;
             });
     });
 
     it('signs up user', () => {
         assert.ok(token);
+        assert.equal(profile.name, 'test');
+        assert.property(profile, 'createdFlashcards');
+        assert.property(profile, 'addedFlashcards');
     });
 
     it('verifies', () => {
