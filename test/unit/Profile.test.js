@@ -25,6 +25,5 @@ describe('Profile model', () => {
         const profile = new Profile({});
         const errors = getErrors(profile.validateSync(), 1);
         assert.equal(errors.name.kind, 'required');
-
     });
 });
