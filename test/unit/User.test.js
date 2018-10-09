@@ -2,7 +2,7 @@ const { assert } = require('chai');
 const { getErrors } = require('../helpers');
 const User = require('../../lib/models/User');
 
-describe('user model', () => {
+describe('User model', () => {
     const credentials = {
         email: 'test@test.com',
         password: 'test123',
