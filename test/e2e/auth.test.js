@@ -24,4 +24,13 @@ describe('Auth API', () => {
     it('signs up user', () => {
         assert.ok(token);
     });
+
+    it('verifies', () => {
+        return request
+            .get('/api/auth/verify')
+            .set('Authorization', token)
+            .then(({ body }) => {
+                assert.isOk(body.verified);
+            });
+    });
 });
