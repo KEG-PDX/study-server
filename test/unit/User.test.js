@@ -23,7 +23,7 @@ describe('user model', () => {
         assert.isDefined(user.hash, 'hash is defined');
         assert.notEqual(user.hash, credentials.password, 'hash is different than password');
         assert.isTrue(user.comparePassword(credentials.password), 'compare good password');
-        assert.isFalse(user.comparePassword('bad password'), 'compare good password');
+        assert.isFalse(user.comparePassword('bad password'), 'compare bad password');
         assert.isUndefined(user.password, 'password has been hashed');
     });
 
