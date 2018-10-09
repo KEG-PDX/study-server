@@ -14,7 +14,7 @@ describe('Auth API', () => {
             .send({
                 name: 'test',
                 email: 'test@test.com',
-                password: 'test123'
+                password: 'test'
             })
             .then(({ body }) => {
                 token = body.token;
@@ -31,6 +31,18 @@ describe('Auth API', () => {
             .set('Authorization', token)
             .then(({ body }) => {
                 assert.isOk(body.verified);
+            });
+    });
+
+    it('logins user', () => {
+        return request
+            .post('/api/auth/signin')
+            .send({
+                email: 'test@test.com',
+                password: 'test'
+            })
+            .then(({ body }) => {
+                assert.ok(body.token);
             });
     });
 });
