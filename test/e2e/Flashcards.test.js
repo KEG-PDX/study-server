@@ -29,9 +29,6 @@ describe.only('Flashcards API', () => {
             'flashcards'
         )
             .then(data => {
-                // delete data.__v;
-                // delete data.updatedAt;
-                // delete data.createdAt;
                 recursionFlashcard = data;
             });
     });
@@ -63,10 +60,8 @@ describe.only('Flashcards API', () => {
             .set('Authorization', token)
             .then(checkOk)
             .then(({ body }) => {
-                assert.deepEqual(body[0].category, recursionFlashcard.category);
-                assert.deepEqual(body[1].category, getInfoFlashcard.category);
-                assert.deepEqual(body[0].question, recursionFlashcard.question);
-                assert.deepEqual(body[1].question, getInfoFlashcard.question);
+                assert.deepEqual(body[0], recursionFlashcard);
+                assert.deepEqual(body[1], getInfoFlashcard);
             });
     });
 
@@ -79,4 +74,8 @@ describe.only('Flashcards API', () => {
                 assert.deepEqual(body, recursionFlashcard);
             });
     });
+
+    it('Updates a flashcard by ID', () => {
+        recursionFlashcard.category = 'NEW CATEGORY'
+    })
 });
