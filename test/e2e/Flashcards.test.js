@@ -29,6 +29,9 @@ describe.only('Flashcards API', () => {
             'flashcards'
         )
             .then(data => {
+                // delete data.__v;
+                // delete data.updatedAt;
+                // delete data.createdAt;
                 recursionFlashcard = data;
             });
     });
@@ -64,6 +67,16 @@ describe.only('Flashcards API', () => {
                 assert.deepEqual(body[1].category, getInfoFlashcard.category);
                 assert.deepEqual(body[0].question, recursionFlashcard.question);
                 assert.deepEqual(body[1].question, getInfoFlashcard.question);
+            });
+    });
+
+    it('Gets a flashcard by ID', () => {
+        return request
+            .get(`/api/flashcards/${recursionFlashcard._id}`)
+            .set('Authorization', token)
+            .then(checkOk)
+            .then(({ body }) => {
+                assert.deepEqual(body, recursionFlashcard);
             });
     });
 });
