@@ -4,7 +4,7 @@ const { dropCollection, createToken } = require('./db');
 const { checkOk } = request;
 const { Types } = require('mongoose');
 
-describe.only('Flashcards API', () => {
+describe('Flashcards API', () => {
 
     beforeEach(() => dropCollection('users'));
     beforeEach(() => dropCollection('flashcards'));
