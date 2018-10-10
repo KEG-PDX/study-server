@@ -76,6 +76,6 @@ describe.only('Flashcards API', () => {
     });
 
     it('Updates a flashcard by ID', () => {
-        recursionFlashcard.category = 'NEW CATEGORY'
-    })
+        recursionFlashcard.category = 'NEW CATEGORY';
+    });
 });
