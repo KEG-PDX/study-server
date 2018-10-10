@@ -13,6 +13,7 @@ describe.only('Flashcards API', () => {
     beforeEach(() => createToken().then(t => token = t));
 
     let recursionFlashcard;
+    let codeProblem;
     beforeEach(() => {
         let flashcard = {
             profileId: Types.ObjectId(),
@@ -30,8 +31,38 @@ describe.only('Flashcards API', () => {
                 recursionFlashcard = res.body;
             });
     });
+    beforeEach(() => {
+        let flashcard = {
+            profileId: Types.ObjectId(),
+            category: 'Programming',
+            subCategory: 'General',
+            question: 'You can’t work out how to solve a coding problem. What do you do to find the answer?',
+            answer: 'First, look at the docs for the technology in question. Stack Overflow or other online resources could be considered second but if I get stuck after a set amount of time, it’s probably best to ask for help.',
+        };
+        return request
+            .post('/api/flashcards')
+            .set('Authorization', token)
+            .send(flashcard)
+            .then(checkOk)
+            .then((res) => {
+                recursionFlashcard = res.body;
+            });
+    });
 
     it('Saves a flashcard', () => {
         assert.isOk(recursionFlashcard);
+    });
+
+    it('Gets a list of flashcards', () => {
+        return request
+            .get('/api/flashcards')
+            .set('Authorization', token)
+            .then(checkOk)
+            .then(({ body }) => {
+                assert.deepEqual(body[0].category, recursionFlashcard.category);
+                assert.deepEqual(body[1].category, codeProblem.category);
+                assert.deepEqual(body[0].question, recursionFlashcard.question);
+                assert.deepEqual(body[1].question, codeProblem.question);
+            });
     });
 });
