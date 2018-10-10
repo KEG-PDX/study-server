@@ -27,9 +27,9 @@ describe.only('Profile API', () => {
             .set('Authorization', token)
             .then(checkOk)
             .then(({ body }) => {
+                /* eslint-disable-next-line */
                 const { __v, _id, ...result } = body;
                 assert.deepEqual(result, expected);
             });
     });
-
 });
