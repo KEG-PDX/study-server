@@ -6,15 +6,14 @@ const { save } = require('../helpers');
 const { dropCollection, createToken } = require('./db');
 
 describe.only('Flashcards API', () => {
+    
+    let token;
+    let recursionFlashcard;
+    let getInfoFlashcard;
 
     beforeEach(() => dropCollection('users'));
     beforeEach(() => dropCollection('flashcards'));
-
-    let token;
     beforeEach(() => createToken().then(t => token = t));
-
-    let recursionFlashcard;
-    let getInfoFlashcard;
     
     beforeEach(() => {
         return save(
