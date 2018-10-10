@@ -1,4 +1,6 @@
 const { assert } = require('chai');
+const request = require('./e2e/request');
+const { checkOk } = request;
 
 const getErrors = (validation, numberExpected) => {
     assert.isDefined(validation);
@@ -7,6 +9,18 @@ const getErrors = (validation, numberExpected) => {
     return errors;
 };
 
+const save = (data, token, route) => {
+    return request
+        .post(`/api/${route}`)
+        .set('Authorization', token)
+        .send(data)
+        .then(checkOk)
+        .then(({ body }) => {
+            return body;
+        });
+};
+
 module.exports = {
-    getErrors
+    getErrors,
+    save
 };
