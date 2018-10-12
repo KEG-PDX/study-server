@@ -20,6 +20,6 @@ module.exports = {
         return request
             .post('/api/auth/signup')
             .send(data)
-            .then(res => res.body.token);
+            .then(res => res.body);
     }
 };

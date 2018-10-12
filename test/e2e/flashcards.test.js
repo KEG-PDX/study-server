@@ -1,5 +1,4 @@
 const { assert } = require('chai');
-const { Types } = require('mongoose');
 const request = require('./request');
 const { checkOk } = request;
 const { save } = require('../helpers');
@@ -7,18 +6,23 @@ const { dropCollection, createToken } = require('./db');
 
 describe('Flashcards API', () => {
     
+    let profile;
     let token;
     let recursionFlashcard;
     let getInfoFlashcard;
-
+    
     beforeEach(() => dropCollection('users'));
     beforeEach(() => dropCollection('flashcards'));
-    beforeEach(() => createToken().then(t => token = t));
-    
+    beforeEach(() => createToken()
+        .then(t => {
+            token = t.token;
+            profile = t.profile;
+        }));
+
     beforeEach(() => {
         return save(
             {
-                profileId: Types.ObjectId(),
+                profileId: profile._id,
                 category: 'Programming',
                 subCategory: 'Javascript',
                 question: 'What is a recursive function? Give an example of when using one might be useful.',
@@ -35,7 +39,7 @@ describe('Flashcards API', () => {
     beforeEach(() => {
         return save(
             {
-                profileId: Types.ObjectId(),
+                profileId: profile._id,
                 category: 'Programming',
                 subCategory: 'General',
                 question: 'You can’t work out how to solve a coding problem. What do you do to find the answer?',
@@ -76,6 +80,14 @@ describe('Flashcards API', () => {
 
     it('Updates a flashcard by ID', () => {
         recursionFlashcard.category = 'NEW CATEGORY';
+        return request
+            .put(`/api/flashcards/${recursionFlashcard._id}`)
+            .set('Authorization', token)
+            .send(recursionFlashcard)
+            .then(checkOk)
+            .then(({ body }) => {
+                assert.deepEqual(body, recursionFlashcard);
+            });
     });
 });
 

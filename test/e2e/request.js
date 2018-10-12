@@ -10,8 +10,7 @@ const server = http.createServer(app);
 const request = chai.request(server).keepOpen();
 
 request.checkOk = res => {
-    if(res.status !== 200) console.log('res status ', res.status);
-    assert.equal(res.status, 200, 'expected http 200 status code');
+    assert.equal(res.status, 200, 'Expected http 200 status code');
     return res;
 };
 

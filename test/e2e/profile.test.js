@@ -13,7 +13,7 @@ describe('Profile API', () => {
     beforeEach(() => dropCollection('users'));
 
     let token;
-    beforeEach(() => createToken().then(t => token = t));
+    beforeEach(() => createToken().then(t => token = t.token));
 
     const expected = {
         name: 'test',
