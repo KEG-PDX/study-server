@@ -5,7 +5,7 @@ const { checkOk } = request;
 const { save } = require('../helpers');
 const { dropCollection, createToken } = require('./db');
 
-describe.only('Flashcards API', () => {
+describe('Flashcards API', () => {
     
     let token;
     let recursionFlashcard;
