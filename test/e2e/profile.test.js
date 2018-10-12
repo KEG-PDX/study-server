@@ -7,13 +7,13 @@ const checkOk = res => {
     return res;
 };
 
-describe.only('Profile API', () => {
+describe('Profile API', () => {
 
     before(() => dropCollection('profiles'));
     before(() => dropCollection('users'));
 
     let token;
-    beforeEach(() => createToken().then(t => token = t));
+    beforeEach(() => createToken().then(t => token = t.token));
 
     const expected = {
         name: 'test',
