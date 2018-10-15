@@ -9,8 +9,8 @@ const checkOk = res => {
 
 describe('Profile API', () => {
 
-    before(() => dropCollection('profiles'));
-    before(() => dropCollection('users'));
+    beforeEach(() => dropCollection('profiles'));
+    beforeEach(() => dropCollection('users'));
 
     let token;
     beforeEach(() => createToken().then(t => token = t.token));
@@ -31,5 +31,16 @@ describe('Profile API', () => {
                 const { __v, _id, ...result } = body;
                 assert.deepEqual(result, expected);
             });
+    });
+
+    it('updates a profile', () => {
+        return request
+            .put('/api/profile')
+            .set('Authorization', token)
+            .send({ name: 'updateTest' })  
+            .then(checkOk)
+            .then(({ body }) => {
+                assert.equal(body.name, 'updateTest');
+            }); 
     });
 });
