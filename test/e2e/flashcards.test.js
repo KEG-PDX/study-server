@@ -4,7 +4,7 @@ const { checkOk } = request;
 const { save } = require('../helpers');
 const { dropCollection, createToken } = require('./db');
 
-describe('Flashcards API', () => {
+describe.only('Flashcards API', () => {
     
     let profile;
     let token;
@@ -13,6 +13,7 @@ describe('Flashcards API', () => {
     
     beforeEach(() => dropCollection('users'));
     beforeEach(() => dropCollection('flashcards'));
+    beforeEach(() => dropCollection('profiles'));
     beforeEach(() => createToken()
         .then(t => {
             token = t.token;
@@ -53,7 +54,7 @@ describe('Flashcards API', () => {
             });
     });
 
-    it('Saves a flashcard', () => {
+    it.only('Saves a flashcard', () => {
         assert.isOk(recursionFlashcard);
     });
 
@@ -87,6 +88,18 @@ describe('Flashcards API', () => {
             .then(checkOk)
             .then(({ body }) => {
                 assert.deepEqual(body, recursionFlashcard);
+            });
+    });
+
+    it('Flags a flashcard deleted by ID', () => {
+        recursionFlashcard.deleted = true;
+        return request
+            .put(`/api/flashcards/${recursionFlashcard._id}`)
+            .set('Authorization', token)
+            .send(recursionFlashcard)
+            .then(checkOk)
+            .then(({ body }) => {
+                assert.equal(body.deleted, true);
             });
     });
 });
