@@ -4,7 +4,7 @@ const { checkOk } = request;
 const { save } = require('../helpers');
 const { dropCollection, createToken } = require('./db');
 
-describe.only('Flashcards API', () => {
+describe('Flashcards API', () => {
     
     let profile;
     let token;
@@ -54,8 +54,18 @@ describe.only('Flashcards API', () => {
             });
     });
 
-    it.only('Saves a flashcard', () => {
+    it('Saves a flashcard', () => {
         assert.isOk(recursionFlashcard);
+    });
+
+    it('Ensures flashcard exists on Profile: createdFlashcards', () => {
+        return request
+            .get('/api/profiles')
+            .set('Authorization', token)
+            .then(checkOk)
+            .then(({ body }) => {
+                assert.lengthOf(body.createdFlashcards, 2);
+            });
     });
 
     it('Gets a list of flashcards', () => {
