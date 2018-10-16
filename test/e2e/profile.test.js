@@ -11,9 +11,14 @@ describe('Profile API', () => {
 
     beforeEach(() => dropCollection('profiles'));
     beforeEach(() => dropCollection('users'));
+    beforeEach(() => dropCollection('flashcards'));
 
     let token;
-    beforeEach(() => createToken().then(t => token = t.token));
+    let profile;
+    beforeEach(() => createToken().then(t => {
+        token = t.token;
+        profile = t.profile;
+    }));
 
     const expected = {
         name: 'test',
@@ -23,7 +28,7 @@ describe('Profile API', () => {
 
     it('gets a profile', () => {
         return request
-            .get('/api/profile')
+            .get('/api/profiles')
             .set('Authorization', token)
             .then(checkOk)
             .then(({ body }) => {
@@ -35,7 +40,7 @@ describe('Profile API', () => {
 
     it('updates a profile', () => {
         return request
-            .put('/api/profile')
+            .put('/api/profiles')
             .set('Authorization', token)
             .send({ name: 'updateTest' })  
             .then(checkOk)
@@ -43,4 +48,33 @@ describe('Profile API', () => {
                 assert.equal(body.name, 'updateTest');
             }); 
     });
+
+    it('adds a flashcard to addedFlashcards', () => {
+        const flashcard = {
+            profileId: profile._id,
+            category: 'category',
+            subCategory: 'subCategory',
+            question: 'knock knock?',
+            answer: 'be quiet.',
+        };
+
+        let flashcardId;
+        return request
+            .post('/api/flashcards')
+            .set('Authorization', token)
+            .send(flashcard)
+            .then(checkOk)
+            .then(({ body }) => flashcardId = body._id)
+            .then(() => {
+                return request
+                    .put(`/api/profiles/${profile._id}/add-flashcard`)
+                    .set('Authorization', token)
+                    .send({ flashcardId })
+                    .then(checkOk)
+                    .then(({ body }) => {
+                        assert.lengthOf(body.addedFlashcards, 1);
+                    });
+            });
+    });
+
 });
