@@ -112,5 +112,22 @@ describe('Flashcards API', () => {
                 assert.equal(body.deleted, true);
             });
     });
+
+    it.only('Deletes a flashcard by the flashcard owner', () => {
+        return request
+            .delete(`/api/flashcards/${recursionFlashcard._id}`)
+            .set('Authorization', token)
+            .then(checkOk)
+            .then(res => {
+                assert.deepEqual(res.body, { removed: true });
+                return request
+                    .get('/api/flashcards')
+                    .set('Authorization', token);
+            })
+            .then(checkOk)
+            .then(({ body }) => {
+                assert.deepEqual(body, [getInfoFlashcard]);
+            });
+    });
 });
 
