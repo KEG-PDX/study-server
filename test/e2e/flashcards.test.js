@@ -113,7 +113,7 @@ describe('Flashcards API', () => {
             });
     });
 
-    it.only('Deletes a flashcard by the flashcard owner', () => {
+    it('Deletes a flashcard by the flashcard owner', () => {
         return request
             .delete(`/api/flashcards/${recursionFlashcard._id}`)
             .set('Authorization', token)
