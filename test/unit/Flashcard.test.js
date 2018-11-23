@@ -30,10 +30,8 @@ describe('Flashcard model', () => {
 
     it('validates required fields', () => {
         const user = new Flashcard({});
-        const errors = getErrors(user.validateSync(), 5);
+        const errors = getErrors(user.validateSync(), 3);
         assert.equal(errors.profileId.kind, 'required');
-        assert.equal(errors.category.kind, 'required');
-        assert.equal(errors.subCategory.kind, 'required');
         assert.equal(errors.question.kind, 'required');
         assert.equal(errors.answer.kind, 'required');
     });
