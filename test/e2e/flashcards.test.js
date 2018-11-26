@@ -13,6 +13,7 @@ describe('Flashcards API', () => {
     
     beforeEach(() => dropCollection('users'));
     beforeEach(() => dropCollection('flashcards'));
+    beforeEach(() => dropCollection('profiles'));
     beforeEach(() => createToken()
         .then(t => {
             token = t.token;
@@ -57,6 +58,16 @@ describe('Flashcards API', () => {
         assert.isOk(recursionFlashcard);
     });
 
+    it('Ensures flashcard exists on Profile: createdFlashcards', () => {
+        return request
+            .get('/api/profiles')
+            .set('Authorization', token)
+            .then(checkOk)
+            .then(({ body }) => {
+                assert.lengthOf(body.createdFlashcards, 2);
+            });
+    });
+
     it('Gets a list of flashcards', () => {
         return request
             .get('/api/flashcards')
@@ -87,6 +98,35 @@ describe('Flashcards API', () => {
             .then(checkOk)
             .then(({ body }) => {
                 assert.deepEqual(body, recursionFlashcard);
+            });
+    });
+
+    it('Flags a flashcard deleted by ID', () => {
+        recursionFlashcard.deleted = true;
+        return request
+            .put(`/api/flashcards/${recursionFlashcard._id}`)
+            .set('Authorization', token)
+            .send(recursionFlashcard)
+            .then(checkOk)
+            .then(({ body }) => {
+                assert.equal(body.deleted, true);
+            });
+    });
+
+    it('Deletes a flashcard by the flashcard owner', () => {
+        return request
+            .delete(`/api/flashcards/${recursionFlashcard._id}`)
+            .set('Authorization', token)
+            .then(checkOk)
+            .then(res => {
+                assert.deepEqual(res.body, { removed: true });
+                return request
+                    .get('/api/flashcards')
+                    .set('Authorization', token);
+            })
+            .then(checkOk)
+            .then(({ body }) => {
+                assert.deepEqual(body, [getInfoFlashcard]);
             });
     });
 });
